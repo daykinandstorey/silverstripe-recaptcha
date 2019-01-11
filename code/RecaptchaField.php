@@ -200,8 +200,21 @@ class RecaptchaField extends FormField
 
         // get the payload of the response and decode it
         $response = json_decode($response, true);
-
         if ($response['success'] != 'true') {
+            $validator->validationError(
+                $this->name,
+                _t(
+                    'RecaptchaField.VALIDSOLUTION',
+                    "Your answer didn't match",
+                    'Recaptcha (https://www.google.com/recaptcha) protects this website '
+                    . 'from spam and abuse.'
+                ),
+                'validation',
+                false
+            );
+            return false;
+        }
+        /*if ($response['success'] != 'true') {
             // Count some errors as "user level", meaning they raise a validation error rather than a system error
             $userLevelErrors = array('missing-input-response', 'invalid-input-response');
             $error = implode(', ', $response['error-codes']);
@@ -225,7 +238,7 @@ class RecaptchaField extends FormField
                 );
                 return false;
             }
-        }
+        }*/
 
         return true;
     }
