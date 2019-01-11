@@ -164,22 +164,6 @@ class RecaptchaField extends FormField
         } else {
             $request = Controller::curr()->getRequest();
         }
-        // don't bother querying the recaptcha-service if fields were empty
-       /* if (!array_key_exists('g-recaptcha-response', $request) || empty($request['g-recaptcha-response'])) {
-            $validator->validationError(
-                $this->name,
-                _t(
-                    'RecaptchaField.EMPTY',
-                    "Please answer the captcha question",
-                    "Recaptcha (https://www.google.com/recaptcha) protects this website "
-                    . "from spam and abuse."
-                ),
-                "validation",
-                false
-            );
-
-            return false;
-        }*/
 
         $response = $this->recaptchaHTTPPost($_REQUEST['g-recaptcha-response']);
 
@@ -214,31 +198,6 @@ class RecaptchaField extends FormField
             );
             return false;
         }
-        /*if ($response['success'] != 'true') {
-            // Count some errors as "user level", meaning they raise a validation error rather than a system error
-            $userLevelErrors = array('missing-input-response', 'invalid-input-response');
-            $error = implode(', ', $response['error-codes']);
-            if (count(array_intersect($response['error-codes'], $userLevelErrors)) === 0) {
-                user_error("RecatpchaField::validate(): Recaptcha-service error: '{$error}'", E_USER_ERROR);
-                return false;
-            } else {
-                // Internal error-string returned by recaptcha, e.g. "incorrect-captcha-sol".
-                // Used to generate the new iframe-url/js-url after form-refresh.
-                Session::set("FormField.{$this->form->FormName()}.{$this->getName()}.error", trim($error));
-                $validator->validationError(
-                    $this->name,
-                    _t(
-                        'RecaptchaField.VALIDSOLUTION',
-                        "Your answer didn't match",
-                        'Recaptcha (https://www.google.com/recaptcha) protects this website '
-                        . 'from spam and abuse.'
-                    ),
-                    'validation',
-                    false
-                );
-                return false;
-            }
-        }*/
 
         return true;
     }
